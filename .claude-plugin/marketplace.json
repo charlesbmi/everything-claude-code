@@ -1,11 +1,10 @@
 {
-  "name": "everything-claude-code",
+  "name": "charlesbmi-claude-code",
   "owner": {
-    "name": "Affaan Mustafa",
-    "email": "affaan@example.com"
+    "name": "Charles"
   },
   "metadata": {
-    "description": "Battle-tested Claude Code configurations from an Anthropic hackathon winner"
+    "description": "Forked Claude Code configurations for scientific computing and ultrasound simulation workflows"
   },
   "plugins": [
     {
@@ -13,10 +12,10 @@
       "source": "./",
       "description": "Complete collection of agents, skills, hooks, commands, and rules evolved over 10+ months of intensive daily use",
       "author": {
-        "name": "Affaan Mustafa"
+        "name": "Affaan Mustafa (original), Charles (fork)"
       },
-      "homepage": "https://github.com/affaan-m/everything-claude-code",
-      "repository": "https://github.com/affaan-m/everything-claude-code",
+      "homepage": "https://github.com/charlesbmi/everything-claude-code",
+      "repository": "https://github.com/charlesbmi/everything-claude-code",
       "license": "MIT",
       "keywords": [
         "agents",
@@ -25,7 +24,6 @@
         "commands",
         "tdd",
         "code-review",
-        "security",
         "best-practices"
       ],
       "category": "workflow",
@@ -36,7 +34,6 @@
         "commands",
         "tdd",
         "code-review",
-        "security",
         "best-practices"
       ]
     }

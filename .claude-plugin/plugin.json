@@ -30,7 +30,6 @@
   "commands": ["./commands/"],
   "skills": ["./skills/"],
   "agents": [
-    "./agents/build-error-resolver.md",
     "./agents/code-reviewer.md",
     "./agents/doc-updater.md",
     "./agents/planner.md",
@@ -38,6 +37,5 @@
     "./agents/python-reviewer.md",
     "./agents/refactor-cleaner.md",
     "./agents/tdd-guide.md"
-  ],
-  "hooks": "./hooks/hooks.json"
+  ]
 }
