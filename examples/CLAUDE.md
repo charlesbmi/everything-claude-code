@@ -1,100 +1,116 @@
-# Example Project CLAUDE.md
+# Example Scientific Python CLAUDE.md
 
-This is an example project-level CLAUDE.md file. Place this in your project root.
+This is an example project-level CLAUDE.md file for Python scientific computing projects. Place this in your project root.
 
 ## Project Overview
 
-[Brief description of your project - what it does, tech stack]
+FastSIMUS is an Array API-compliant ultrasound simulation library with NumPy/JAX/CuPy backends for 50-100x GPU acceleration.
 
-## Critical Rules
+## Rules
 
-### 1. Code Organization
+### 1. Array API Compliance
 
+- ALL numerical operations via Array API Standard
+- Use `array_api_compat` and `xp` namespace for backend portability
+- Test with array-api-strict
+- Preserve input array type in outputs
+- See `python-scientific-patterns` skill for detailed patterns
+
+### 2. Type Safety
+
+- jaxtyping for shape documentation
+- beartype for runtime validation
+- Google-style docstrings with physical units
+- Type hints on all public functions
+
+### 3. Code Organization
+
+- src/ layout with clear module structure
+- Organize by algorithm/domain
 - Many small files over few large files
 - High cohesion, low coupling
 - 200-400 lines typical, 800 max per file
-- Organize by feature/domain, not by type
-
-### 2. Code Style
-
 - No emojis in code, comments, or documentation
-- Immutability always - never mutate objects or arrays
-- No console.log in production code
-- Proper error handling with try/catch
-- Input validation with Zod or similar
 
-### 3. Testing
+### 4. Testing
 
 - TDD: Write tests first
-- 80% minimum coverage
-- Unit tests for utilities
-- Integration tests for APIs
-- E2E tests for critical flows
-
-### 4. Security
-
-- No hardcoded secrets
-- Environment variables for sensitive data
-- Validate all user inputs
-- Parameterized queries only
-- CSRF protection enabled
+- 80% minimum coverage (95%+ for core algorithms)
+- Numerical validation against PyMUST (rtol=1e-4)
+- Edge cases: empty, NaN, Inf, large arrays
+- Backend compatibility tests (NumPy, JAX, CuPy)
+- See `python-scientific-testing` skill for test patterns
 
 ## File Structure
 
 ```
 src/
-|-- app/              # Next.js app router
-|-- components/       # Reusable UI components
-|-- hooks/            # Custom React hooks
-|-- lib/              # Utility libraries
-|-- types/            # TypeScript definitions
-```
-
-## Key Patterns
-
-### API Response Format
-
-```typescript
-interface ApiResponse<T> {
-  success: boolean
-  data?: T
-  error?: string
-}
-```
-
-### Error Handling
-
-```typescript
-try {
-  const result = await operation()
-  return { success: true, data: result }
-} catch (error) {
-  console.error('Operation failed:', error)
-  return { success: false, error: 'User-friendly message' }
-}
-```
-
-## Environment Variables
-
-```bash
-# Required
-DATABASE_URL=
-API_KEY=
-
-# Optional
-DEBUG=false
+├── fast_simus/
+│   ├── __init__.py
+│   ├── py.typed              # PEP 561 marker
+│   ├── transducers.py        # Array geometry
+│   ├── txdelay.py            # Delay computation
+│   ├── pfield.py             # Pressure field
+│   ├── simus.py              # RF simulation
+│   └── utils/
+│       ├── constants.py      # Physical constants
+│       └── _array_api.py     # Array API helpers and types
+tests/
+├── test_transducers.py
+├── test_pfield.py
+├── conftest.py               # pytest fixtures
+└── data/
+    └── reference_pfield.zarr # Reference data (Zarr format)
 ```
 
 ## Available Commands
 
-- `/tdd` - Test-driven development workflow
-- `/plan` - Create implementation plan
-- `/code-review` - Review code quality
-- `/build-fix` - Fix build errors
+- `/python-test` - Run pytest with TDD workflow
+- `/python-review` - Review code quality
+- `/python-build` - Fix type/lint errors
+
+## Key Constraints
+
+### Array API Usage
+
+- Use `array_api_compat.array_namespace()` to get `xp` namespace
+- Avoid NumPy-specific functions (e.g., `np.asmatrix`, `np.asscalar`)
+- Use `xp` namespace for all array operations
+- Preserve backend type through function calls
+
+### Data Storage
+
+- Use Zarr format (`.zarr`) for reference data and test fixtures
+- Zarr provides better compression and chunked access for large arrays
+- See `python-scientific-testing` skill for Zarr loading patterns
+
+### Immutability
+
+- Avoid mutating input arrays (breaks JAX compatibility)
+- Create new arrays for all operations
+- See `python-scientific-patterns` skill for immutable patterns
+
+## Environment Variables
+
+```bash
+# Optional
+JAX_ENABLE_X64=true           # 64-bit precision in JAX
+CUDA_VISIBLE_DEVICES=0        # GPU selection
+DATA_DIR=./data               # Data directory
+MAX_ARRAY_MB=1000             # Memory limit
+```
 
 ## Git Workflow
 
-- Conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `test:`
-- Never commit to main directly
-- PRs require review
+- Conventional commits: `feat:`, `fix:`, `refactor:`, `test:`, `docs:`
 - All tests must pass before merge
+- Coverage must not decrease
+- Type checking must pass (ty check)
+- Linting must pass (ruff check)
+
+## Reference Skills
+
+For detailed patterns and examples, see:
+- `python-scientific-patterns` - Array API patterns, function signatures, dataclasses
+- `python-scientific-testing` - Test patterns, fixtures, Zarr loading
+- `coding-standards` - General Python coding standards

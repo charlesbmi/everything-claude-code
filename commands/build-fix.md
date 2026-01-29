@@ -1,8 +1,8 @@
 # Build and Fix
 
-Incrementally fix TypeScript and build errors:
+Incrementally fix Python type errors and linting issues:
 
-1. Run build: npm run build or pnpm build
+1. Run checks: `ty check src/` and `ruff check .`
 
 2. Parse error output:
    - Group by file
@@ -13,7 +13,7 @@ Incrementally fix TypeScript and build errors:
    - Explain the issue
    - Propose fix
    - Apply fix
-   - Re-run build
+   - Re-run checks
    - Verify error resolved
 
 4. Stop if:
@@ -27,3 +27,11 @@ Incrementally fix TypeScript and build errors:
    - New errors introduced
 
 Fix one error at a time for safety!
+
+## Common Python Error Types
+
+- Type errors (ty check)
+- Missing imports
+- Linting issues (ruff)
+- Array shape mismatches
+- Dependency conflicts (uv)

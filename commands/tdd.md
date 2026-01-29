@@ -124,7 +124,7 @@ describe('calculateLiquidityScore', () => {
 ## Step 3: Run Tests - Verify FAIL
 
 ```bash
-npm test lib/liquidity.test.ts
+pytest tests/test_module.py
 
 FAIL lib/liquidity.test.ts
   ✕ should return high score for liquid market (2 ms)
@@ -169,7 +169,7 @@ export function calculateLiquidityScore(market: MarketData): number {
 ## Step 5: Run Tests - Verify PASS
 
 ```bash
-npm test lib/liquidity.test.ts
+pytest tests/test_module.py
 
 PASS lib/liquidity.test.ts
   ✓ should return high score for liquid market (3 ms)
@@ -226,7 +226,7 @@ export function calculateLiquidityScore(market: MarketData): number {
 ## Step 7: Verify Tests Still Pass
 
 ```bash
-npm test lib/liquidity.test.ts
+pytest tests/test_module.py
 
 PASS lib/liquidity.test.ts
   ✓ should return high score for liquid market (3 ms)
@@ -241,7 +241,7 @@ PASS lib/liquidity.test.ts
 ## Step 8: Check Coverage
 
 ```bash
-npm test -- --coverage lib/liquidity.test.ts
+pytest --cov=src tests/test_module.py
 
 File           | % Stmts | % Branch | % Funcs | % Lines
 ---------------|---------|----------|---------|--------

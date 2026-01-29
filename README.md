@@ -3,8 +3,8 @@
 [![Stars](https://img.shields.io/github/stars/affaan-m/everything-claude-code?style=flat)](https://github.com/affaan-m/everything-claude-code/stargazers)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 ![Shell](https://img.shields.io/badge/-Shell-4EAA25?logo=gnu-bash&logoColor=white)
+![Python](https://img.shields.io/badge/-Python-3776AB?logo=python&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white)
-![Go](https://img.shields.io/badge/-Go-00ADD8?logo=go&logoColor=white)
 ![Markdown](https://img.shields.io/badge/-Markdown-000000?logo=markdown&logoColor=white)
 
 **The complete collection of Claude Code configs from an Anthropic hackathon winner.**
@@ -94,56 +94,43 @@ everything-claude-code/
 |
 |-- agents/           # Specialized subagents for delegation
 |   |-- planner.md           # Feature implementation planning
-|   |-- architect.md         # System design decisions
 |   |-- tdd-guide.md         # Test-driven development
 |   |-- code-reviewer.md     # Quality and security review
-|   |-- security-reviewer.md # Vulnerability analysis
-|   |-- build-error-resolver.md
-|   |-- e2e-runner.md        # Playwright E2E testing
 |   |-- refactor-cleaner.md  # Dead code cleanup
 |   |-- doc-updater.md       # Documentation sync
-|   |-- go-reviewer.md       # Go code review (NEW)
-|   |-- go-build-resolver.md # Go build error resolution (NEW)
+|   |-- python-reviewer.md   # Python scientific code review
+|   |-- python-build-resolver.md # Python type/lint error resolution
 |
 |-- skills/           # Workflow definitions and domain knowledge
-|   |-- coding-standards/           # Language best practices
-|   |-- backend-patterns/           # API, database, caching patterns
-|   |-- frontend-patterns/          # React, Next.js patterns
-|   |-- continuous-learning/        # Auto-extract patterns from sessions (Longform Guide)
+|   |-- coding-standards/           # Python scientific best practices
 |   |-- continuous-learning-v2/     # Instinct-based learning with confidence scoring
-|   |-- iterative-retrieval/        # Progressive context refinement for subagents
 |   |-- strategic-compact/          # Manual compaction suggestions (Longform Guide)
-|   |-- tdd-workflow/               # TDD methodology
-|   |-- security-review/            # Security checklist
-|   |-- eval-harness/               # Verification loop evaluation (Longform Guide)
-|   |-- verification-loop/          # Continuous verification (Longform Guide)
-|   |-- golang-patterns/            # Go idioms and best practices (NEW)
-|   |-- golang-testing/             # Go testing patterns, TDD, benchmarks (NEW)
+|   |-- tdd-workflow/               # TDD methodology with pytest
+|   |-- python-scientific-patterns/ # Array API, NumPy/JAX patterns
+|   |-- python-scientific-testing/  # pytest, hypothesis, benchmarks
 |
 |-- commands/         # Slash commands for quick execution
 |   |-- tdd.md              # /tdd - Test-driven development
 |   |-- plan.md             # /plan - Implementation planning
-|   |-- e2e.md              # /e2e - E2E test generation
 |   |-- code-review.md      # /code-review - Quality review
 |   |-- build-fix.md        # /build-fix - Fix build errors
 |   |-- refactor-clean.md   # /refactor-clean - Dead code removal
 |   |-- learn.md            # /learn - Extract patterns mid-session (Longform Guide)
 |   |-- checkpoint.md       # /checkpoint - Save verification state (Longform Guide)
 |   |-- verify.md           # /verify - Run verification loop (Longform Guide)
-|   |-- setup-pm.md         # /setup-pm - Configure package manager
-|   |-- go-review.md        # /go-review - Go code review (NEW)
-|   |-- go-test.md          # /go-test - Go TDD workflow (NEW)
-|   |-- go-build.md         # /go-build - Fix Go build errors (NEW)
-|   |-- skill-create.md     # /skill-create - Generate skills from git history (NEW)
-|   |-- instinct-status.md  # /instinct-status - View learned instincts (NEW)
-|   |-- instinct-import.md  # /instinct-import - Import instincts (NEW)
-|   |-- instinct-export.md  # /instinct-export - Export instincts (NEW)
-|   |-- evolve.md           # /evolve - Cluster instincts into skills (NEW)
+|   |-- python-review.md    # /python-review - Python scientific code review
+|   |-- python-test.md      # /python-test - Python TDD workflow
+|   |-- python-build.md     # /python-build - Fix Python type/lint errors
+|   |-- skill-create.md     # /skill-create - Generate skills from git history
+|   |-- instinct-status.md  # /instinct-status - View learned instincts
+|   |-- instinct-import.md  # /instinct-import - Import instincts
+|   |-- instinct-export.md  # /instinct-export - Export instincts
+|   |-- evolve.md           # /evolve - Cluster instincts into skills
 |
 |-- rules/            # Always-follow guidelines (copy to ~/.claude/rules/)
-|   |-- security.md         # Mandatory security checks
-|   |-- coding-style.md     # Immutability, file organization
-|   |-- testing.md          # TDD, 80% coverage requirement
+|   |-- validation.md       # Array validation, NaN/Inf checks
+|   |-- coding-style.md     # Type hints, immutability, docstrings
+|   |-- testing.md          # TDD, 80% coverage, numerical precision
 |   |-- git-workflow.md     # Commit format, PR process
 |   |-- agents.md           # When to delegate to subagents
 |   |-- performance.md      # Model selection, context management
@@ -408,11 +395,11 @@ Please contribute! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
 ### Ideas for Contributions
 
-- Language-specific skills (Python, Rust patterns) - Go now included!
-- Framework-specific configs (Django, Rails, Laravel)
+- Language-specific skills (Rust, Julia patterns) - Python and Go now included!
+- Framework-specific configs (PyTorch, TensorFlow, scikit-learn)
 - DevOps agents (Kubernetes, Terraform, AWS)
 - Testing strategies (different frameworks)
-- Domain-specific knowledge (ML, data engineering, mobile)
+- Domain-specific knowledge (ML, data engineering, scientific computing)
 
 ---
 

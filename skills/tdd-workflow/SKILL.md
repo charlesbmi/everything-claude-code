@@ -1,19 +1,19 @@
 ---
 name: tdd-workflow
-description: Use this skill when writing new features, fixing bugs, or refactoring code. Enforces test-driven development with 80%+ coverage including unit, integration, and E2E tests.
+description: Use this skill when writing new features, fixing bugs, or refactoring code. Enforces test-driven development with 80%+ coverage including unit, integration, and numerical validation tests.
 ---
 
 # Test-Driven Development Workflow
 
-This skill ensures all code development follows TDD principles with comprehensive test coverage.
+This skill ensures all code development follows TDD principles with comprehensive test coverage for scientific Python code.
 
 ## When to Activate
 
 - Writing new features or functionality
 - Fixing bugs or issues
 - Refactoring existing code
-- Adding API endpoints
-- Creating new components
+- Adding new algorithms
+- Creating new array operations
 
 ## Core Principles
 
@@ -30,75 +30,90 @@ ALWAYS write tests first, then implement code to make tests pass.
 
 #### Unit Tests
 - Individual functions and utilities
-- Component logic
+- Array operations
 - Pure functions
-- Helpers and utilities
+- Mathematical computations
 
 #### Integration Tests
-- API endpoints
-- Database operations
-- Service interactions
-- External API calls
+- Multi-step processing pipelines
+- File I/O operations
+- Backend compatibility (NumPy, JAX, CuPy)
+- Algorithm combinations
 
-#### E2E Tests (Playwright)
-- Critical user flows
-- Complete workflows
-- Browser automation
-- UI interactions
+#### Numerical Validation Tests
+- Precision against reference implementations
+- Edge cases (NaN, Inf, empty arrays)
+- Performance benchmarks
+- Property-based tests
 
 ## TDD Workflow Steps
 
-### Step 1: Write User Journeys
+### Step 1: Define Requirements
 ```
 As a [role], I want to [action], so that [benefit]
 
 Example:
-As a user, I want to search for markets semantically,
-so that I can find relevant markets even without exact keywords.
+As a researcher, I want to filter ultrasound signals with a bandpass filter,
+so that I can isolate frequencies of interest for analysis.
 ```
 
 ### Step 2: Generate Test Cases
-For each user journey, create comprehensive test cases:
+For each requirement, create comprehensive test cases:
 
-```typescript
-describe('Semantic Search', () => {
-  it('returns relevant markets for query', async () => {
-    // Test implementation
-  })
+```python
+import pytest
+import numpy as np
+from numpy.testing import assert_allclose
 
-  it('handles empty query gracefully', async () => {
-    // Test edge case
-  })
-
-  it('falls back to substring search when Redis unavailable', async () => {
-    // Test fallback behavior
-  })
-
-  it('sorts results by similarity score', async () => {
-    // Test sorting logic
-  })
-})
+class TestBandpassFilter:
+    def test_preserves_passband_frequencies(self):
+        """Filter preserves frequencies in passband."""
+        # Test implementation
+        pass
+    
+    def test_handles_empty_signal(self):
+        """Reject empty signal gracefully."""
+        # Test edge case
+        pass
+    
+    def test_rejects_invalid_cutoff_frequencies(self):
+        """Raise error for invalid cutoff frequencies."""
+        # Test validation
+        pass
+    
+    def test_preserves_signal_shape(self):
+        """Output shape matches input shape."""
+        # Test shape preservation
+        pass
 ```
 
 ### Step 3: Run Tests (They Should Fail)
 ```bash
-npm test
+pytest tests/test_filtering.py
 # Tests should fail - we haven't implemented yet
 ```
 
 ### Step 4: Implement Code
 Write minimal code to make tests pass:
 
-```typescript
-// Implementation guided by tests
-export async function searchMarkets(query: string) {
-  // Implementation here
-}
+```python
+from jaxtyping import Float
+from numpy.typing import NDArray
+
+def bandpass_filter(
+    signal: Float[NDArray, "time"],
+    lowcut: float,
+    highcut: float,
+    fs: float
+) -> Float[NDArray, "time"]:
+    """Apply bandpass filter to signal."""
+    # Implementation guided by tests
+    pass
 ```
 
 ### Step 5: Run Tests Again
 ```bash
-npm test
+pytest tests/test_filtering.py
 # Tests should now pass
 ```
 
@@ -111,275 +126,350 @@ Improve code quality while keeping tests green:
 
 ### Step 7: Verify Coverage
 ```bash
-npm run test:coverage
+pytest --cov=src --cov-report=term-missing
 # Verify 80%+ coverage achieved
 ```
 
 ## Testing Patterns
 
-### Unit Test Pattern (Jest/Vitest)
-```typescript
-import { render, screen, fireEvent } from '@testing-library/react'
-import { Button } from './Button'
+### Unit Test Pattern (pytest)
+```python
+import pytest
+import numpy as np
+from numpy.testing import assert_allclose
 
-describe('Button Component', () => {
-  it('renders with correct text', () => {
-    render(<Button>Click me</Button>)
-    expect(screen.getByText('Click me')).toBeInTheDocument()
-  })
-
-  it('calls onClick when clicked', () => {
-    const handleClick = jest.fn()
-    render(<Button onClick={handleClick}>Click</Button>)
-
-    fireEvent.click(screen.getByRole('button'))
-
-    expect(handleClick).toHaveBeenCalledTimes(1)
-  })
-
-  it('is disabled when disabled prop is true', () => {
-    render(<Button disabled>Click</Button>)
-    expect(screen.getByRole('button')).toBeDisabled()
-  })
-})
+class TestSignalFiltering:
+    """Test signal filtering functions."""
+    
+    def test_filters_noise_from_signal(self):
+        """Filter removes noise while preserving signal."""
+        # Arrange
+        fs = 1000.0
+        t = np.linspace(0, 1, int(fs))
+        signal = np.sin(2 * np.pi * 50 * t)
+        noisy = signal + np.random.normal(0, 0.1, len(signal))
+        
+        # Act
+        filtered = bandpass_filter(noisy, lowcut=40, highcut=60, fs=fs)
+        
+        # Assert
+        noise_reduction = np.std(filtered - signal) / np.std(noisy - signal)
+        assert noise_reduction < 0.5
+    
+    def test_preserves_signal_shape(self):
+        """Output shape matches input shape."""
+        signal = np.random.randn(1000)
+        filtered = bandpass_filter(signal, lowcut=40, highcut=60, fs=1000)
+        assert filtered.shape == signal.shape
+    
+    def test_rejects_empty_signal(self):
+        """Raise error for empty signal."""
+        with pytest.raises(ValueError, match="cannot be empty"):
+            bandpass_filter(np.array([]), lowcut=40, highcut=60, fs=1000)
 ```
 
-### API Integration Test Pattern
-```typescript
-import { NextRequest } from 'next/server'
-import { GET } from './route'
+### Integration Test Pattern
+```python
+import pytest
+import numpy as np
+from pathlib import Path
 
-describe('GET /api/markets', () => {
-  it('returns markets successfully', async () => {
-    const request = new NextRequest('http://localhost/api/markets')
-    const response = await GET(request)
-    const data = await response.json()
-
-    expect(response.status).toBe(200)
-    expect(data.success).toBe(true)
-    expect(Array.isArray(data.data)).toBe(true)
-  })
-
-  it('validates query parameters', async () => {
-    const request = new NextRequest('http://localhost/api/markets?limit=invalid')
-    const response = await GET(request)
-
-    expect(response.status).toBe(400)
-  })
-
-  it('handles database errors gracefully', async () => {
-    // Mock database failure
-    const request = new NextRequest('http://localhost/api/markets')
-    // Test error handling
-  })
-})
+class TestProcessingPipeline:
+    """Test multi-step signal processing pipeline."""
+    
+    def test_full_pipeline_with_file_io(self, tmp_path):
+        """Test complete processing from file to file."""
+        # Arrange: Create test input file
+        input_file = tmp_path / "input.npy"
+        test_signal = np.random.randn(1000)
+        np.save(input_file, test_signal)
+        
+        # Act: Run processing pipeline
+        output_file = tmp_path / "output.npy"
+        process_signal_file(input_file, output_file, lowcut=40, highcut=60)
+        
+        # Assert: Verify output file exists and has correct data
+        assert output_file.exists()
+        result = np.load(output_file)
+        assert result.shape == test_signal.shape
+    
+    def test_backend_compatibility(self):
+        """Test algorithm works with NumPy and JAX."""
+        signal = np.random.randn(100)
+        
+        # NumPy backend
+        result_numpy = compute_fft(signal)
+        
+        # JAX backend
+        import jax.numpy as jnp
+        signal_jax = jnp.array(signal)
+        result_jax = compute_fft(signal_jax)
+        
+        # Results should be equivalent
+        assert_allclose(result_numpy, np.array(result_jax), rtol=1e-6)
+    
+    def test_handles_file_not_found(self):
+        """Gracefully handle missing input file."""
+        with pytest.raises(FileNotFoundError):
+            process_signal_file(Path("nonexistent.npy"), Path("output.npy"))
 ```
 
-### E2E Test Pattern (Playwright)
-```typescript
-import { test, expect } from '@playwright/test'
+### Numerical Validation Test Pattern
+```python
+import pytest
+import numpy as np
+from numpy.testing import assert_allclose
 
-test('user can search and filter markets', async ({ page }) => {
-  // Navigate to markets page
-  await page.goto('/')
-  await page.click('a[href="/markets"]')
-
-  // Verify page loaded
-  await expect(page.locator('h1')).toContainText('Markets')
-
-  // Search for markets
-  await page.fill('input[placeholder="Search markets"]', 'election')
-
-  // Wait for debounce and results
-  await page.waitForTimeout(600)
-
-  // Verify search results displayed
-  const results = page.locator('[data-testid="market-card"]')
-  await expect(results).toHaveCount(5, { timeout: 5000 })
-
-  // Verify results contain search term
-  const firstResult = results.first()
-  await expect(firstResult).toContainText('election', { ignoreCase: true })
-
-  // Filter by status
-  await page.click('button:has-text("Active")')
-
-  // Verify filtered results
-  await expect(results).toHaveCount(3)
-})
-
-test('user can create a new market', async ({ page }) => {
-  // Login first
-  await page.goto('/creator-dashboard')
-
-  // Fill market creation form
-  await page.fill('input[name="name"]', 'Test Market')
-  await page.fill('textarea[name="description"]', 'Test description')
-  await page.fill('input[name="endDate"]', '2025-12-31')
-
-  // Submit form
-  await page.click('button[type="submit"]')
-
-  // Verify success message
-  await expect(page.locator('text=Market created successfully')).toBeVisible()
-
-  // Verify redirect to market page
-  await expect(page).toHaveURL(/\/markets\/test-market/)
-})
+class TestNumericalPrecision:
+    """Test numerical accuracy against reference implementation."""
+    
+    @pytest.fixture
+    def reference_data(self):
+        """Load PyMUST reference data."""
+        return np.load("tests/data/reference_pfield.npz")
+    
+    def test_matches_pymust_reference(self, reference_data):
+        """Results match PyMUST within tolerance."""
+        result = compute_pfield(
+            reference_data["positions"],
+            reference_data["frequency"]
+        )
+        
+        assert_allclose(
+            result,
+            reference_data["expected"],
+            rtol=1e-4,  # 0.01% relative tolerance
+            atol=1e-8   # Absolute tolerance for near-zero
+        )
+    
+    @pytest.mark.parametrize("size", [100, 1000, 10000])
+    def test_performance_scaling(self, benchmark, size):
+        """Benchmark performance at different sizes."""
+        signal = np.random.randn(size)
+        result = benchmark(compute_fft, signal)
+        assert result.shape == signal.shape
 ```
 
 ## Test File Organization
 
 ```
 src/
-├── components/
-│   ├── Button/
-│   │   ├── Button.tsx
-│   │   ├── Button.test.tsx          # Unit tests
-│   │   └── Button.stories.tsx       # Storybook
-│   └── MarketCard/
-│       ├── MarketCard.tsx
-│       └── MarketCard.test.tsx
-├── app/
-│   └── api/
-│       └── markets/
-│           ├── route.ts
-│           └── route.test.ts         # Integration tests
-└── e2e/
-    ├── markets.spec.ts               # E2E tests
-    ├── trading.spec.ts
-    └── auth.spec.ts
+├── my_library/
+│   ├── __init__.py
+│   ├── filtering.py
+│   ├── transforms.py
+│   └── beamforming.py
+tests/
+├── test_filtering.py          # Unit tests for filtering
+├── test_transforms.py         # Unit tests for transforms
+├── test_beamforming.py        # Unit tests for beamforming
+├── test_integration.py        # Integration tests
+├── conftest.py                # pytest fixtures
+└── data/
+    ├── reference_pfield.npz   # Reference data
+    └── test_signals.npz       # Test data
 ```
 
-## Mocking External Services
+## Mocking and Fixtures
 
-### Supabase Mock
-```typescript
-jest.mock('@/lib/supabase', () => ({
-  supabase: {
-    from: jest.fn(() => ({
-      select: jest.fn(() => ({
-        eq: jest.fn(() => Promise.resolve({
-          data: [{ id: 1, name: 'Test Market' }],
-          error: null
-        }))
-      }))
-    }))
-  }
-}))
+### File I/O Mocking
+```python
+from unittest.mock import Mock, patch, mock_open
+
+def test_load_signal_with_mock(tmp_path):
+    """Test loading signal with temporary file."""
+    # Create temporary test file
+    test_file = tmp_path / "signal.npy"
+    test_data = np.array([1.0, 2.0, 3.0])
+    np.save(test_file, test_data)
+    
+    # Test loading
+    result = load_signal(test_file)
+    assert_array_equal(result, test_data)
+
+@patch('builtins.open', mock_open(read_data='1.0,2.0,3.0'))
+def test_load_csv_with_mock():
+    """Test loading CSV with mocked file."""
+    result = load_csv_signal('dummy.csv')
+    assert len(result) == 3
 ```
 
-### Redis Mock
-```typescript
-jest.mock('@/lib/redis', () => ({
-  searchMarketsByVector: jest.fn(() => Promise.resolve([
-    { slug: 'test-market', similarity_score: 0.95 }
-  ])),
-  checkRedisHealth: jest.fn(() => Promise.resolve({ connected: true }))
-}))
+### Fixtures for Test Data
+```python
+import pytest
+
+@pytest.fixture
+def sample_signal():
+    """Generate sample 1D signal."""
+    fs = 1000.0
+    t = np.linspace(0, 1, int(fs))
+    return np.sin(2 * np.pi * 50 * t)
+
+@pytest.fixture
+def reference_data():
+    """Load reference data from PyMUST."""
+    return np.load("tests/data/reference_pfield.npz")
+
+class TestWithFixtures:
+    def test_uses_sample_signal(self, sample_signal):
+        """Test using fixture."""
+        result = process_signal(sample_signal)
+        assert result.shape == sample_signal.shape
 ```
 
-### OpenAI Mock
-```typescript
-jest.mock('@/lib/openai', () => ({
-  generateEmbedding: jest.fn(() => Promise.resolve(
-    new Array(1536).fill(0.1) // Mock 1536-dim embedding
-  ))
-}))
+### Backend Mocking
+```python
+@pytest.fixture(params=["numpy", "jax"])
+def array_backend(request):
+    """Test with multiple backends."""
+    backend = request.param
+    if backend == "numpy":
+        import numpy as xp
+    elif backend == "jax":
+        pytest.importorskip("jax")
+        import jax.numpy as xp
+    return xp
+
+def test_backend_compatibility(array_backend):
+    """Algorithm works with all backends."""
+    xp = array_backend
+    arr = xp.array([1.0, 2.0, 3.0])
+    result = compute_norm(arr)
+    assert float(result) == pytest.approx(3.7416573867739413)
 ```
 
 ## Test Coverage Verification
 
 ### Run Coverage Report
 ```bash
-npm run test:coverage
+pytest --cov=src --cov-report=term-missing
 ```
 
-### Coverage Thresholds
-```json
-{
-  "jest": {
-    "coverageThresholds": {
-      "global": {
-        "branches": 80,
-        "functions": 80,
-        "lines": 80,
-        "statements": 80
-      }
-    }
-  }
-}
+### Coverage Configuration
+```toml
+# pyproject.toml
+[tool.coverage.run]
+source = ["src"]
+omit = ["*/tests/*", "*/test_*.py"]
+
+[tool.coverage.report]
+precision = 2
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
+
+[tool.coverage.html]
+directory = "htmlcov"
 ```
 
 ## Common Testing Mistakes to Avoid
 
 ### ❌ WRONG: Testing Implementation Details
-```typescript
-// Don't test internal state
-expect(component.state.count).toBe(5)
+```python
+# Don't test internal implementation
+assert processor._internal_buffer == expected
 ```
 
-### ✅ CORRECT: Test User-Visible Behavior
-```typescript
-// Test what users see
-expect(screen.getByText('Count: 5')).toBeInTheDocument()
+### ✅ CORRECT: Test Behavior
+```python
+# Test observable behavior
+result = processor.process(signal)
+assert result.shape == expected_shape
+assert_allclose(result, expected_output, rtol=1e-4)
 ```
 
-### ❌ WRONG: Brittle Selectors
-```typescript
-// Breaks easily
-await page.click('.css-class-xyz')
+### ❌ WRONG: Using Exact Equality for Floats
+```python
+# Breaks due to floating point precision
+assert result == 3.14159265359
 ```
 
-### ✅ CORRECT: Semantic Selectors
-```typescript
-// Resilient to changes
-await page.click('button:has-text("Submit")')
-await page.click('[data-testid="submit-button"]')
+### ✅ CORRECT: Use Tolerance
+```python
+# Use appropriate tolerance
+assert result == pytest.approx(3.14159265359, rel=1e-10)
+# Or for arrays
+assert_allclose(result, expected, rtol=1e-4, atol=1e-8)
 ```
 
 ### ❌ WRONG: No Test Isolation
-```typescript
-// Tests depend on each other
-test('creates user', () => { /* ... */ })
-test('updates same user', () => { /* depends on previous test */ })
+```python
+# Tests depend on each other
+def test_creates_signal():
+    global test_signal
+    test_signal = generate_signal()
+
+def test_processes_signal():
+    result = process(test_signal)  # Depends on previous test
 ```
 
 ### ✅ CORRECT: Independent Tests
-```typescript
-// Each test sets up its own data
-test('creates user', () => {
-  const user = createTestUser()
-  // Test logic
-})
+```python
+# Each test sets up its own data
+def test_creates_signal():
+    signal = generate_signal()
+    assert signal.shape == (1000,)
 
-test('updates user', () => {
-  const user = createTestUser()
-  // Update logic
-})
+def test_processes_signal():
+    signal = generate_signal()  # Independent setup
+    result = process(signal)
+    assert result.shape == signal.shape
 ```
 
 ## Continuous Testing
 
 ### Watch Mode During Development
 ```bash
-npm test -- --watch
-# Tests run automatically on file changes
+pytest-watch
+# Or use pytest-xdist for parallel execution
+pytest -n auto --looponfail
 ```
 
 ### Pre-Commit Hook
 ```bash
-# Runs before every commit
-npm test && npm run lint
+# .pre-commit-config.yaml
+repos:
+  - repo: local
+    hooks:
+      - id: pytest
+        name: pytest
+        entry: pytest
+        language: system
+        pass_filenames: false
+        always_run: true
 ```
 
 ### CI/CD Integration
 ```yaml
 # GitHub Actions
-- name: Run Tests
-  run: npm test -- --coverage
-- name: Upload Coverage
-  uses: codecov/codecov-action@v3
+name: Tests
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install uv
+          uv sync
+      
+      - name: Run tests with coverage
+        run: |
+          uv run pytest --cov=src --cov-report=xml
+      
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
 ```
 
 ## Best Practices

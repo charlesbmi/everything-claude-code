@@ -28,12 +28,12 @@ Detailed guidelines are in `~/.claude/rules/`:
 
 | Rule File | Contents |
 |-----------|----------|
-| security.md | Security checks, secret management |
-| coding-style.md | Immutability, file organization, error handling |
-| testing.md | TDD workflow, 80% coverage requirement |
+| validation.md | Array validation, NaN/Inf checks, memory limits |
+| coding-style.md | Immutability, type hints, docstrings |
+| testing.md | TDD workflow, 80% coverage, numerical precision |
 | git-workflow.md | Commit format, PR workflow |
 | agents.md | Agent orchestration, when to use which agent |
-| patterns.md | API response, repository patterns |
+| patterns.md | Array API patterns, dataclass patterns |
 | performance.md | Model selection, context management |
 | hooks.md | Hooks System |
 
@@ -46,8 +46,9 @@ Located in `~/.claude/agents/`:
 | Agent | Purpose |
 |-------|---------|
 | planner | Feature implementation planning |
-| architect | System design and architecture |
 | tdd-guide | Test-driven development |
+| python-reviewer | Python scientific code review |
+| python-build-resolver | Fix type/lint errors |
 | code-reviewer | Code review for quality/security |
 | security-reviewer | Security vulnerability analysis |
 | build-error-resolver | Build error resolution |
