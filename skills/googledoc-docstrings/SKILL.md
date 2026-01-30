@@ -121,7 +121,14 @@ Note:
 
 ### Example
 
-Executable examples (run with `pytest --doctest-modules`):
+Most docstrings do not need examples, because unit/integration tests
+and specific `examples/` already folders show examples.
+
+If used, executable docstring examples (optional) should:
+
+- be concise
+- run with `pytest --doctest-modules`
+- not duplicate type-hint info
 
 ```python
 Example:
@@ -235,7 +242,7 @@ def bandpass_filter(
 
 ## Doctest Validation
 
-Run doctests to verify examples work:
+If you write docstring examples, run doctests to verify:
 
 ```bash
 # Run doctests for a module
@@ -351,5 +358,4 @@ plugins:
 3. **Include units** - "distance in meters", "frequency in Hz"
 4. **Document defaults** - "Defaults to 1540 (soft tissue)"
 5. **Mention shape** - For arrays, describe expected dimensions
-6. **Add examples** - Executable examples catch documentation rot
-7. **Keep it concise** - More detail in Note section if needed
+6. **Keep it concise** - More detail in Note section if needed
